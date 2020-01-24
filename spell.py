@@ -29,7 +29,7 @@ q = query
 q = unicodedata.normalize("NFC", q)
 #q = q.encode('utf-8')
 
-r = requests.post(full_url, data={'text1': q})
+r = requests.post(full_url, data={'text1': " ".join(q.split())})
 
 soup = BeautifulSoup(r.content)
 # javascript portion
