@@ -31,7 +31,7 @@ q = unicodedata.normalize("NFC", q)
 
 r = requests.post(full_url, data={'text1': q})
 
-soup = BeautifulSoup(r.content, "lxml")
+soup = BeautifulSoup(r.content)
 # javascript portion
 s = soup.find_all('script')[-1].text
 paren_start = 39
@@ -39,11 +39,19 @@ paren_dict = find_parens(s)
 
 if paren_dict:
     paren_end = paren_dict[paren_start]
+    answers = []
     for x, y in [(k['orgStr'], k['candWord']) for k in literal_eval(s[paren_start:paren_end+1])[0]['errInfo']]:
-        #print("{}\n\t->".format(x.contents[0].encode('utf-8'))),
-        print("{}\n\t->{}\n".format(x, y))
+        answers.append(" ".join(y.split()))
+        # print("{}\n\t->".format(x.contents[0].encode('utf-8'))),
+        print("{} -> {}\n".format(x, " ".join(y.split())))
         # print("{}\n\t->".format(x)),
         # #print("{}".format('\n\t-> '.join([x for x in y.contents if type(x) != bs4.element.Tag]).encode('utf-8')))
         # print("{}".format('\n\t-> '.join([x for x in yif type(x) != bs4.element.Tag])))
+    # candidates = " ".join(answers).split("|")
+    # if len(candidates) > 1:
+    #     for idx, answer in enumerate(candidates):
+    #         print(f"{idx}. {answer}")
+    # else:
+    #     print(" ".join(answers))
 else:
     print("Done.")
