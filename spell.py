@@ -1,3 +1,4 @@
+import re
 import sys
 import unicodedata
 from ast import literal_eval
@@ -27,9 +28,11 @@ query = sys.argv[1]
 #q = query.decode('utf-8')
 q = query
 q = unicodedata.normalize("NFC", q)
+q = re.sub(r'(\w)\n', r'\1.\n', q)
+q = " ".join(q.split())
 #q = q.encode('utf-8')
 
-r = requests.post(full_url, data={'text1': " ".join(q.split())})
+r = requests.post(full_url, data={'text1': q})
 
 soup = BeautifulSoup(r.content)
 # javascript portion
